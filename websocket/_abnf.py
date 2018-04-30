@@ -159,7 +159,7 @@ class ABNF(object):
         skip_utf8_validation: skip utf8 validation.
         """
         if self.rsv1 or self.rsv2 or self.rsv3:
-            raise WebSocketProtocolException("rsv is not implemented, yet")
+            raise WebSocketProtocolException("rsv is not implemented, yet", self)
 
         if self.opcode not in ABNF.OPCODES:
             raise WebSocketProtocolException("Invalid opcode %r", self.opcode)
