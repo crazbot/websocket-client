@@ -21,7 +21,6 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
 """
 import logging
 
-logging.basicConfig()
 _logger = logging.getLogger('websocket')
 _traceEnabled = False
 
