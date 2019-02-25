@@ -163,8 +163,8 @@ class WebSocketApp(object):
                 try:
                     self.sock.ping()
                 except Exception as ex:
-                    _logging.warning("send_ping routine terminated: {}".format(ex))
-                    break
+                    raise WebSocketException(
+                        "send_ping routine terminated: {}".format(ex))
 
     def run_forever(self, sockopt=None, sslopt=None,
                     ping_interval=0, ping_timeout=None,
@@ -314,7 +314,8 @@ class WebSocketApp(object):
             try:
                 callback(self, *args)
             except Exception as e:
-                _logging.error("error from callback {}: {}".format(callback, e))
+                raise WebSocketException(
+                    "error from callback {}: {}".format(callback, e))
                 if _logging.isEnabledForDebug():
                     _, _, tb = sys.exc_info()
                     traceback.print_tb(tb)

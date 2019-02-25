@@ -124,11 +124,11 @@ def _open_socket(addrinfo_list, sockopt, timeout):
                 err = error
                 continue
             else:
-                raise
+                raise WebSocketException("websocket._http._open_socket error: {}".format(error.errno))
         else:
             break
     else:
-        raise err
+        raise WebSocketException("websocket._http._open_socket error: {}".format(err))
 
     return sock
 

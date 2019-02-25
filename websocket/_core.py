@@ -402,7 +402,7 @@ class WebSocket(object):
                     if isEnabledForError():
                         recv_status = struct.unpack("!H", frame.data[0:2])[0]
                         if recv_status != STATUS_NORMAL:
-                            error("close status: " + repr(recv_status))
+                            raise WebSocketException("close status: " + repr(recv_status))
                 except:
                     pass
                 self.sock.settimeout(sock_timeout)

@@ -82,6 +82,12 @@ def recv(sock, bufsize):
     except socket.timeout as e:
         message = extract_err_message(e)
         raise WebSocketTimeoutException(message)
+    except socket.error as e:
+        raise WebSocketException("websocket._socket.recv error: {}".format(e.errno))
+    except socket.herror as e:
+        raise WebSocketException("websocket._socket.recv herror: {}".format(e.errno))
+    except socket.gaierror as e:
+        raise WebSocketException("websocket._socket.recv gaierror: {}".format(e.errno))
     except SSLError as e:
         message = extract_err_message(e)
         if isinstance(message, str) and 'timed out' in message:
@@ -118,6 +124,12 @@ def send(sock, data):
     except socket.timeout as e:
         message = extract_err_message(e)
         raise WebSocketTimeoutException(message)
+    except socket.error as e:
+        raise WebSocketException("websocket._socket.send error: {}".format(e.errno))
+    except socket.herror as e:
+        raise WebSocketException("websocket._socket.send herror: {}".format(e.errno))
+    except socket.gaierror as e:
+        raise WebSocketException("websocket._socket.send gaierror: {}".format(e.errno))
     except Exception as e:
         message = extract_err_message(e)
         if isinstance(message, str) and "timed out" in message:

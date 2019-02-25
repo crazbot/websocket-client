@@ -28,6 +28,7 @@ import six
 from ._exceptions import *
 from ._utils import validate_utf8
 from threading import Lock
+import deflate
 
 try:
     if six.PY3:
@@ -159,7 +160,7 @@ class ABNF(object):
         skip_utf8_validation: skip utf8 validation.
         """
         if self.rsv1 or self.rsv2 or self.rsv3:
-            raise WebSocketProtocolException("rsv is not implemented, yet", self)
+            raise WebSocketProtocolException("rsv is not implemented, yet")
 
         if self.opcode not in ABNF.OPCODES:
             raise WebSocketProtocolException("Invalid opcode %r", self.opcode)
@@ -380,7 +381,16 @@ class frame_buffer(object):
             self.clear()
 
             frame = ABNF(fin, rsv1, rsv2, rsv3, opcode, has_mask, payload)
-            frame.validate(self.skip_utf8_validation)
+            try:
+                frame.validate(self.skip_utf8_validation)
+            except WebSocketProtocolException, e:
+                if len(e.args)>0:
+                    estr = e.args[0]
+                    if estr == "rsv is not implemented, yet":
+                        if frame.rsv1==1 and frame.rsv2==0 and frame.rsv3==0:
+                            frame.data = deflate.gzip(frame.data)
+                else:
+                    raise e
 
         return frame
 
